@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:title fill-slot="content-title">
+  <h1 class="documentFirstHeading">Thank You</h1>
+</metal:title>
+
+<metal:title fill-slot="content-description">
+</metal:title>
+
+<metal:core fill-slot="content-core">
+    <!-- P5 errors might not display correctly, P4 support only -->
+    <div class="jaz-shop-message error" tal:condition="view/mail_not_sent">
+      <p tal:content="string:NOTE: ${view/mail_not_sent}">Error</p>
+    </div>
+
+    <tal:no-error tal:condition="not:view/error">
+      <div tal:condition="view/cart_data">
+        <p><strong>Order Complete</strong><br />
+        <span>Thank you for your purchase.</span>
+        </p>
+      </div>
+      <br />
+      <tal:b condition="view/cart_data">
+
+        <table class="listing cart-listing">
+          <tr>
+            <th>Purchases</th>
+            <th style="width: 90px;">Price</th>
+            <th style="width: 90px;">Quantity</th>
+            <th style="width: 90px;">Amount</th>
+          </tr>
+          <tal:items repeat="item view/cart_data">
+            <tr class="item">
+              <td>
+                <div>
+                  <span tal:content="item/name">Item</span>
+                </div>
+              </td>
+              <td>
+                  <span tal:content="python:'${:,.2f}'.format(item['price'])">Price</span>
+              </td>
+              <td>
+                <span tal:replace="item/quantity">Quantity</span>
+              </td>
+              <td>
+                <span tal:content="python:'${:,.2f}'.format(item['price']*item['quantity'])">Price</span>
+              </td>
+            </tr>
+          </tal:items>
+          <tal:shipping_method tal:condition="view/ship_method">
+              <tal:shipping tal:condition="python:view.ship_charge != 0">
+                <tr>
+                  <td tal:content="string:Shipping - ${view/ship_method}"></td>
+                  <td></td>
+                  <td></td>
+                  <td tal:content="python:'${:,.2f}'.format(view.ship_charge)" />
+                </tr>
+              </tal:shipping>
+          </tal:shipping_method>
+          <tal:tax tal:repeat="tax_item view/taxes">
+            <tr>
+              <td tal:content="string:${tax_item/label}"></td>
+              <td></td>
+              <td></td>
+              <td tal:content="python:'${:,.2f}'.format(tax_item['tax'])">TAX</td>
+            </tr>
+          </tal:tax>
+
+        </table>
+
+        <br />
+        <div class="subtotal">
+          <p><strong>Your purchases total</strong>
+          <span tal:content="python:'${:,.2f}'.format(view.amount)"></span>
+          </p>
+        </div>
+        <br />
+      </tal:b>
+    </tal:no-error>
+    <div class="jaz-shop-message error" tal:condition="view/error">
+      <p tal:content="view/error">Error</p>
+      <p><a href="@@checkout"><button>Back to Checkout</button></a></p>
+    </div>
+
+</metal:core>
+</body>
+</html>

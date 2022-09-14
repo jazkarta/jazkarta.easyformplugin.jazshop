@@ -3,6 +3,7 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="jazkarta.easyformplugin.jazshop">
 
   <i18n:registerTranslations directory="locales" />
@@ -49,6 +50,24 @@
   <utility
       component=".action.JazShopCheckoutHandler"
       name="jazkarta.easyformplugin.salesforce.action.JazShopCheckout"
+      />
+
+  <browser:page
+      name="jazshop-easyform-callback"
+      for="*"
+      class=".browser.JazShopEasyformCallback"
+      permission="zope2.View"
+      />
+
+  <permission title="jazkarta.easyformplugin.jazshop: Access Easyform Orders"
+              id="jazkarta.easyformplugin.jazshop.AccessEasyformOrders">
+  </permission>
+
+  <browser:page
+      name="jazshop-easyform-orders"
+      for=".action.JazShopCheckout"
+      class=".browser.JazShopEasyformOrders"
+      permission="jazkarta.easyformplugin.jazshop.AccessEasyformOrders"
       />
 
 </configure>

@@ -1,12 +1,19 @@
 <?xml version="1.0"?>
 <rolemap>
+  <roles>
+    <role name="Easyform Orders Accessor"/>
+  </roles>
   <permissions>
-  
     <permission acquire="True"
                 name="jazkarta.easyformplugin.jazshop: Add Jazkarta Shop Checkout Actions">
       <role name="Manager" />
       <role name="Owner" />
       <role name="Site Administrator" />
+    </permission>
+    <permission name="jazkarta.easyformplugin.jazshop: Access Easyform Orders" acquire="False">
+      <role name="Site Administrator" />
+      <role name="Manager" />
+      <role name="Easyform Orders Accessor" />
     </permission>
 
   </permissions>

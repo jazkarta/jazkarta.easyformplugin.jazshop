@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+<metal:override fill-slot="top_slot"
+    tal:define="disable_column_two python:request.set('disable_plone.rightcolumn',1);"/>
+
+<metal:main fill-slot="content-core">
+  <div>
+    <h1 class="documentFirstHeading">Export Orders - <tal:title replace="context/aq_parent/Title|context/Title|nothing" /></h1>
+
+    <form id="export-form-orders" name="export-form-orders" method="post"
+          tal:condition="view/orders_exist"
+          tal:attributes="action string:${context/absolute_url}/${view/__name__}">
+        <div>
+            <tal:bad_dates tal:condition="not:view/check_date_integrity">
+                <h2>Selected date range incorrect, displaying all orders.</h2>
+            </tal:bad_dates>
+             <table id="shop-order-date-selection-table">
+                 <tbody>
+                    <tr>
+                        <th><h5>Start Date</h5></th>
+                        <th><h5>End Date</h5></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                         <td class="order-date-picker-box">
+                            <input class="pat-pickadate"
+                                name="Start-Date"
+                                data-pat-pickadate="time:false"
+                                tal:attributes="value python:request.get('Start-Date', None)" />
+                        </td>
+                        <td class="order-date-picker-box">
+                            <input class="pat-pickadate"
+                                name="End-Date"
+                                data-pat-pickadate="time:false"
+                                tal:attributes="value python:request.get('End-Date', None)" />
+                        </td>
+
+                    </tr>
+                 </tbody>
+             </table>
+        </div>
+        <div>&nbsp;</div>
+        <button id="export_csv_button" type="submit" name="export_csv">Export CSV</button>
+    </form>
+    <div class="NoResults" tal:condition="not:view/orders_exist">No orders found for this form.</div>
+  </div>
+</metal:main>
+</body>
+</html>
