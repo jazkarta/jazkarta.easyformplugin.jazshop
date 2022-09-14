@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<rolemap>
+  <permissions>
+  
+    <permission acquire="True"
+                name="jazkarta.easyformplugin.jazshop: Add JazShop Actions">
+      <role name="Manager" />
+      <role name="Owner" />
+      <role name="Site Administrator" />
+    </permission>
+
+  </permissions>
+</rolemap>
