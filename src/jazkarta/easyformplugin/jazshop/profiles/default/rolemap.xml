@@ -3,7 +3,7 @@
   <permissions>
   
     <permission acquire="True"
-                name="jazkarta.easyformplugin.jazshop: Add JazShop Actions">
+                name="jazkarta.easyformplugin.jazshop: Add Jazkarta Shop Checkout Actions">
       <role name="Manager" />
       <role name="Owner" />
       <role name="Site Administrator" />
