@@ -8,4 +8,9 @@
     title="jazkarta.easyformplugin.jazshop: Add Jazkarta Shop Checkout Actions"
     />
 
+  <permission
+    id="jazkarta.easyformplugin.jazshop.AccessEasyformOrders"
+    title="jazkarta.easyformplugin.jazshop: Access Easyform Orders"
+    />
+
 </configure>
