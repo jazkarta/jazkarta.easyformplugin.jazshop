@@ -59,4 +59,9 @@
       permission="jazkarta.easyformplugin.jazshop.AccessEasyformOrders"
       />
 
+  <utility
+      name="jazkarta.easyform.jazshop.available_products"
+      component=".vocabs.get_available_products_vocab"
+      />
+
 </configure>
