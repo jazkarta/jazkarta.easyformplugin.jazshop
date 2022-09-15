@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-"""Module where all interfaces, events and exceptions live."""
-
 import z3c.form
 from collective.easyform.interfaces.actions import IAction
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
