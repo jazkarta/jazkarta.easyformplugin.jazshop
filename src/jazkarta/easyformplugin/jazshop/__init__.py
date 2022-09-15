@@ -4,3 +4,7 @@ from zope.i18nmessageid import MessageFactory
 
 
 _ = MessageFactory("jazkarta.easyformplugin.jazshop")
+
+
+from .interfaces import ILikert  # noqa
+from .interfaces import ILikertWidget  # noqa
