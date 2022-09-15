@@ -1,6 +1,5 @@
 import logging
 import os
-
 from decimal import Decimal
 from collective.easyform.actions import Action, ActionFactory
 from collective.easyform.api import get_context, get_expression
@@ -50,8 +49,7 @@ class JazShopCheckout(Action):
         """ TODO
         """
         form = self.get_form()
-        print "HERE WE ARE"
-        import pdb; pdb.set_trace()
+        print "SUCCESSFULL ACTION EXECUTED"
         # TODO
 
 
@@ -157,7 +155,23 @@ JazShopCheckoutHandler = BaseHandler(JazShopCheckout)
 
 
 
-# XXX REGISTER THIS EVENT
+# XXX TODO REGISTER THESE EVENTS
+'''
+def add_checkout_redirect_after_creation(adapter, event):
+    redirect_to = 'redirect_to:string:${portal_url}/checkout'
+    success_override = adapter.aq_parent.getThanksPageOverride()
+    if success_override:
+        message = """By default, this adapter redirects the user to
+            the Jazkarta Shop checkout after a successful submission.
+            However, this form already has an active override. The
+            checkout override was not added. Please see the documentation
+            for information on how to set it manually."""
+        messages = IStatusMessage(event.object.REQUEST)
+        messages.add(message)
+    else:
+        adapter.aq_parent.setThanksPageOverride(redirect_to)
+'''
+
 """
 def handle_item_removed(event):
     cart = event.object
@@ -177,10 +191,3 @@ def handle_item_removed(event):
     cart.data['order_details'] = order_details
     cart.save()
 """
-
-
-
-
-
-#=============================================================================
-# fields
