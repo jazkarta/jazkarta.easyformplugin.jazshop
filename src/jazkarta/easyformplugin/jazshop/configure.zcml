@@ -11,7 +11,7 @@
   <!--<includeDependencies package="." />-->
   <include package="collective.easyform" />
   <include file="permissions.zcml" />
-  <include file="likert.zcml" />
+  <include file="fields.zcml" />
 
   <genericsetup:registerProfile
       name="default"
@@ -63,16 +63,6 @@
   <utility
       name="jazkarta.easyformplugin.jazshop.vocabs.available_products"
       component=".vocabs.get_available_products_vocab"
-      />
-
-  <utility
-      name="jazkarta.easyformplugin.jazshop.fields.Likert"
-      component=".fields.LikertFactory"
-      />
-
-  <utility
-      name="jazkarta.easyformplugin.jazshop.fields.Likert"
-      component=".fields.LikertHandler"
       />
 
 </configure>

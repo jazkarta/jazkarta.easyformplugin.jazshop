@@ -3,6 +3,31 @@
     xmlns:z3c="http://namespaces.zope.org/z3c"
     i18n_domain="z3c.form">
 
+  <!-- Field definitions -->
+  <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopProductSelect"
+      component=".fields.JazShopProductSelectFactory"
+      />
+
+  <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopProductSelect"
+      component=".fields.JazShopProductSelectHandler"
+      />
+
+  <utility
+      name="jazkarta.easyformplugin.jazshop.fields.Likert"
+      component=".fields.LikertFactory"
+      />
+
+  <utility
+      name="jazkarta.easyformplugin.jazshop.fields.Likert"
+      component=".fields.LikertHandler"
+      />
+
+  <!-- Custom widgets -->
+  <adapter factory=".fields.JazShopProductSelectTerms" />
+  <adapter factory=".fields.JazShopProductSelectFieldWidget" />
+
   <class class=".likert.LikertWidget">
     <require
         permission="zope.Public"
@@ -12,7 +37,7 @@
 
   <adapter
       factory=".likert.LikertFieldWidget"
-      for="..interfaces.ILikert
+      for=".interfaces.ILikert
            z3c.form.interfaces.IFormLayer"
       />
 

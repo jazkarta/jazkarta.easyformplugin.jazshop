@@ -7,12 +7,33 @@ from zope import schema, interface
 
 from . import _
 
+
 class IJazkartaEasyformpluginJazShopLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
 
 
 class IJazShopCheckout(IAction):
     """Easyform action which places data in the jazkarta.shop cart"""
+
+
+class IJazShopProductSelect(IField):
+
+    available_products = schema.Tuple(
+        title=_(u'Available Products'),
+        value_type=schema.Choice(
+            vocabulary=u'jazkarta.easyformplugin.jazshop.vocabs.available_products',
+        ),
+        required=False,
+        default=(),
+    )
+
+    use_radio = schema.Bool(
+        title=_(u'Use radio buttons?'),
+        description=_(u'Use a radio widget instead of a select dropdown, '
+                      u'best for lists of 5 or fewer prodcuts.'),
+        required=False,
+        default=False,
+    )
 
 
 class ILikert(IField):
