@@ -36,6 +36,22 @@ class IJazShopProductSelect(IField):
     )
 
 
+product_select_field = z3c.form.util.getSpecification(
+    IJazShopProductSelect['available_products']
+)
+
+
+class IJazShopProductMultiSelect(IJazShopProductSelect):
+
+    use_radio = schema.Bool(
+        title=_(u'Use checkbox selection?'),
+        description=_(u'Use a checkbox widget instead of a multi-select dropdown, '
+                      u'best for lists of 5 or fewer prodcuts.'),
+        required=False,
+        default=False,
+    )
+
+
 class ILikert(IField):
 
     questions = schema.List(

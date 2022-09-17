@@ -3,13 +3,17 @@ from z3c.form.interfaces import IFieldWidget
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import ITerms
 from z3c.form.interfaces import IWidget
+from z3c.form.term import Terms
 from z3c.form.browser.radio import RadioFieldWidget
 from z3c.form.browser.select import SelectFieldWidget
+from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from plone.app.z3cform.widget import SelectFieldWidget as PloneSelectFieldWidget
 from zope.component import adapter
 from zope.component import queryUtility
 from zope.interface import implementer
 from zope.interface import Interface
 from zope.schema import TextLine
+from zope.schema import Tuple
 from zope.schema import Field
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary
@@ -17,6 +21,7 @@ from plone.schemaeditor.fields import FieldFactory
 from plone.supermodel.exportimport import BaseHandler
 
 from .interfaces import IJazShopProductSelect
+from .interfaces import IJazShopProductMultiSelect
 from .interfaces import ILikert
 
 
@@ -36,22 +41,19 @@ class JazShopProductSelect(TextLine):
 @implementer(ITerms)
 @adapter(Interface, IFormLayer, Interface, IJazShopProductSelect, IWidget)
 def JazShopProductSelectTerms(context, request, form, field, widget):
+    terms = Terms()
     vocab_factory = queryUtility(
         IVocabularyFactory,
         name=u'jazkarta.easyformplugin.jazshop.vocabs.available_products'
     )
     if vocab_factory is not None:
         vocab = vocab_factory(context)
-        return SimpleVocabulary([
+        terms.terms = SimpleVocabulary([
             vocab.getTerm(v) for v in field.available_products
         ])
-    return SimpleVocabulary([])
-
-
-JazShopProductSelectFactory = FieldFactory(
-    JazShopProductSelect, _(u"Product Selection")
-)
-JazShopProductSelectHandler = BaseHandler(JazShopProductSelect)
+    else:
+        terms.terms = SimpleVocabulary([])
+    return terms
 
 
 @adapter(IJazShopProductSelect, IFormLayer)
@@ -60,6 +62,33 @@ def JazShopProductSelectFieldWidget(field, request):
     if field.use_radio:
         return RadioFieldWidget(field, request)
     return SelectFieldWidget(field, request)
+
+
+JazShopProductSelectFactory = FieldFactory(
+    JazShopProductSelect, _(u"Product Selection")
+)
+JazShopProductSelectHandler = BaseHandler(JazShopProductSelect)
+
+
+@implementer(IJazShopProductMultiSelect)
+class JazShopProductMultiSelect(Tuple):
+    """A Product Multi-selection Field"""
+
+    __init__ = JazShopProductSelect.__init__.im_func
+
+
+@adapter(IJazShopProductMultiSelect, IFormLayer)
+@implementer(IFieldWidget)
+def JazShopProductMultiSelectFieldWidget(field, request):
+    if field.use_radio:
+        return CheckBoxFieldWidget(field, request)
+    return PloneSelectFieldWidget(field, request)
+
+
+JazShopProductMultiSelectFactory = FieldFactory(
+    JazShopProductMultiSelect, _(u"Multiple Product Selection")
+)
+JazShopProductMultiSelectHandler = BaseHandler(JazShopProductMultiSelect)
 
 
 @implementer(ILikert)

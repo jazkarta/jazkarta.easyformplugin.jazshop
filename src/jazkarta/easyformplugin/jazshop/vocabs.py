@@ -4,6 +4,7 @@ from zope.interface import directlyProvides
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+from Products.CMFPlone.utils import safe_unicode
 
 
 def get_available_products_vocab(context):
@@ -15,7 +16,7 @@ def get_available_products_vocab(context):
         sort_order='ascending')
     for product in products:
         terms.append(SimpleTerm(
-            value=product.UID,
+            value=safe_unicode(product.UID),
             token=product.UID,
             title=product.Title,
         ))

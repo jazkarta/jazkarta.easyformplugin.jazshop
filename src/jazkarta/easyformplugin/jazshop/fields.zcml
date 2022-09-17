@@ -15,6 +15,16 @@
       />
 
   <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopProductMultiSelect"
+      component=".fields.JazShopProductMultiSelectFactory"
+      />
+
+  <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopProductMultiSelect"
+      component=".fields.JazShopProductMultiSelectHandler"
+      />
+
+  <utility
       name="jazkarta.easyformplugin.jazshop.fields.Likert"
       component=".fields.LikertFactory"
       />
@@ -25,8 +35,13 @@
       />
 
   <!-- Custom widgets -->
+  <adapter
+      for=".interfaces.product_select_field plone.app.z3cform.interfaces.IPloneFormLayer"
+      factory="plone.app.z3cform.widget.SelectFieldWidget"
+      />
   <adapter factory=".fields.JazShopProductSelectTerms" />
   <adapter factory=".fields.JazShopProductSelectFieldWidget" />
+  <adapter factory=".fields.JazShopProductMultiSelectFieldWidget" />
 
   <class class=".likert.LikertWidget">
     <require
