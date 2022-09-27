@@ -1,17 +1,16 @@
 import logging
-import os
-from decimal import Decimal
+import pdb
 from collective.easyform.actions import Action, ActionFactory
-from collective.easyform.api import get_context, get_expression
+from collective.easyform.api import get_context, get_schema
 from plone.supermodel.exportimport import BaseHandler
+from zope.globalrequest import getRequest
 from zope.interface import implementer
-from zope.interface import directlyProvides
-from zope.interface import implements
 from jazkarta.shop.cart import Cart
-from Products.statusmessages.interfaces import IStatusMessage
 
 from . import _
 from .interfaces import IJazShopCheckout
+from .interfaces import IJazShopProductSelect
+from .interfaces import IJazShopProductMultiSelect
 
 logger = logging.getLogger(__name__)
 
@@ -44,23 +43,49 @@ class JazShopCheckout(Action):
         details += '</dl><p></p>'
         return form_fields, details
         """
+    def get_cart(self, request=None):
+        """Retrieve the cart object and make sure it's initialized for use with this action.
+        """
+        if request is None:
+            request = getRequest()
+        cart = Cart.from_request(request)
+        if 'easyform_products' not in cart.data:
+            cart.data['easyform_products'] = {}
+        if 'easyform_details' not in cart.data:
+            cart.data['easyform_details'] = {}
+        if 'easyform_forms' not in cart.data:
+            cart.data['easyform_forms'] = {}
+        return cart
 
     def onSuccess(self, fields, request):
         """ TODO
         """
         form = self.get_form()
-        print "SUCCESSFULL ACTION EXECUTED"
-        # TODO
+        cart = self.get_cart(request)
+        schema = get_schema(form)
 
+        item_prepend = None
+        if self.formIdExpression:
+            try:
+                item_prepend = self.formIdExpression.format(**fields)
+            except (KeyError, ValueError):
+                pass
+        products = get_products(schema, fields)
+        easyform_products = []
+        for uid in products:
+            if uid != '0':
+                cart.add_product(uid)
+                easyform_products.append(uid)
+        if item_prepend is not None:
+            for item in cart._items.values():
+                if (item['uid'] in products and
+                        not item['name'].startswith(item_prepend)):
+                    item['name'] = item_prepend + item['name']
+        cart.save()
+        print("SUCCESSFULL ACTION EXECUTED")
 
         # XXX Test this, see whats required and what is not
         """
-        item_prepend = None
-        if getattr(self, 'formIdExpression', None):
-            try:
-                item_prepend = self.formIdExpression.format(**REQUEST.form)
-            except (KeyError, ValueError):
-                pass
         cart = Cart.from_request(REQUEST)
         products = []
         pfg_products = []
@@ -139,6 +164,21 @@ class JazShopCheckout(Action):
                 selected.insert(0, ('{}|0'.format(context.fgDefault), context.fgDefault))
             return selected
         """
+
+
+def get_products(schema, fields):
+    """Given a schema and field values, look into fields that belong to this add-on,
+    extract and return the products that are selected
+    """
+    products = []
+    for field in fields:
+        if field not in schema:
+            continue  # Should never happen
+        if IJazShopProductMultiSelect.providedBy(schema[field]):
+            products.extend(fields[field])
+        elif IJazShopProductSelect.providedBy(schema[field]):
+            products.append(fields[field])
+    return products
 
 
 # Action factory used by the UI for adding a new easyform action
