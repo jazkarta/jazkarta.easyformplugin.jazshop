@@ -3,5 +3,6 @@
   <version>1000</version>
   <dependencies>
     <dependency>profile-collective.easyform:default</dependency>
+    <dependency>profile-jazkarta.shop:default</dependency>
   </dependencies>
 </metadata>
