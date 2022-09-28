@@ -65,4 +65,15 @@
       component=".vocabs.get_available_products_vocab"
       />
 
+  <subscriber
+      for="jazkarta.shop.interfaces.ItemRemoved"
+      handler=".action.handle_item_removed"
+      />
+
+  <subscriber
+      for="collective.easyform.interfaces.IEasyFormActionsContext
+           plone.schemaeditor.interfaces.ISchemaModifiedEvent"
+      handler=".action.add_checkout_redirect_after_creation"
+      />
+
 </configure>
