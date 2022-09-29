@@ -143,12 +143,19 @@ LikertHandler = BaseHandler(Likert)
 @implementer(IJazShopArbitraryPriceStringField)
 class JazShopArbitraryPriceStringField(TextLine):
     """Arbitrary price field (suitable for donations)"""
+
+    available_products = ()
+
     def _validate(self, value):
         super(JazShopArbitraryPriceStringField, self)._validate(value)
         try:
             Decimal(value)
         except InvalidOperation:
             raise Invalid(_("invalid_price", "Please insert a number"))
+
+    def __init__(self, **kwargs):
+        self.available_products = kwargs.pop('available_products', ())
+        TextLine.__init__(self, **kwargs)
 
 
 JazShopArbitraryPriceStringFieldFactory = FieldFactory(

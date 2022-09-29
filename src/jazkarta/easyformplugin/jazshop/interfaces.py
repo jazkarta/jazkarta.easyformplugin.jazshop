@@ -82,3 +82,15 @@ class ILikertWidget(z3c.form.interfaces.IWidget):
 
 class IJazShopArbitraryPriceStringField(IField):
     """Arbitrary price field (suitable for donations)"""
+    available_products = schema.Tuple(
+        title=_(u'Available Products'),
+        value_type=schema.Choice(
+            vocabulary=u'jazkarta.easyformplugin.jazshop.vocabs.available_products',
+        ),
+        required=True,
+        default=(),
+    )
+
+arbitrary_price_product_select_field = z3c.form.util.getSpecification(
+    IJazShopArbitraryPriceStringField['available_products']
+)

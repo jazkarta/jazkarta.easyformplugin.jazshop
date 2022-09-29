@@ -214,7 +214,7 @@ JazShopCheckoutHandler = BaseHandler(JazShopCheckout)
 
 
 def add_checkout_redirect_after_creation(adapter, event):
-    if not isinstance(event.field, JazShopCheckout):
+    if not hasattr(event, "field") or not isinstance(event.field, JazShopCheckout):
         return
     redirect_to = 'string:${portal_url}/checkout'
     form = event.object.aq_parent.aq_base
