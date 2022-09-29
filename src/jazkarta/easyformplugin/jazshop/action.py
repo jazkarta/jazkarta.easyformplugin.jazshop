@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 @implementer(IJazShopCheckout)
 class JazShopCheckout(Action):
-    """easyform action which .......... TODO
+    """easyform action that will add elements from the form to the jazkarta.shop cart.
     """
 
     def __init__(self, **kw):
@@ -222,14 +222,15 @@ def add_checkout_redirect_after_creation(adapter, event):
     if isinstance(event, FieldAddedEvent):
         form.thanksPageOverrideAction = u'redirect_to'
         if form.thanksPageOverride is not None:
-            message = """By default, this adapter redirects the user to
-                the Jazkarta Shop checkout after a successful submission.
-                However, this form already has an active override.
-                The current value is %s. The checkout override was not added.
-                Please see the documentation for information on how
-                to set it manually.""" % form.thanksPageOverride
-            messages = IStatusMessage(event.object.REQUEST)
-            messages.add(message)
+            if form.thanksPageOverride != redirect_to:
+                message = """By default, this adapter redirects the user to
+                    the Jazkarta Shop checkout after a successful submission.
+                    However, this form already has an active override.
+                    The current value is %s. The checkout override was not added.
+                    Please see the documentation for information on how
+                    to set it manually.""" % form.thanksPageOverride
+                messages = IStatusMessage(event.object.REQUEST)
+                messages.add(message)
         else:
             form.thanksPageOverride = redirect_to
     if isinstance(event, FieldRemovedEvent):
