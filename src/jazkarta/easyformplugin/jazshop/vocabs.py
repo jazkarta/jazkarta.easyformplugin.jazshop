@@ -18,7 +18,7 @@ def get_available_products_vocab(context):
         terms.append(SimpleTerm(
             value=safe_unicode(product.UID),
             token=product.UID,
-            title=product.Title,
+            title="$%s - %s" % (product.price, product.Title),
         ))
     return SimpleVocabulary(terms)
 directlyProvides(get_available_products_vocab, IVocabularyFactory)

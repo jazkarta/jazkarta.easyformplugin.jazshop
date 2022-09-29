@@ -30,7 +30,6 @@ class JazShopProductSelect(TextLine):
     """A Product Selection Field"""
     use_radio = False
     available_products = ()
-    vocabularyName = None
 
     def __init__(self, **kwargs):
         self.use_radio = kwargs.pop('use_radio', False)
@@ -46,6 +45,12 @@ def JazShopProductSelectTerms(context, request, form, field, widget):
         IVocabularyFactory,
         name=u'jazkarta.easyformplugin.jazshop.vocabs.available_products'
     )
+    # FIXME This approach is quite inefficient: to build the vocabulary
+    # of the products available on this form (the ones the user selected)
+    # we're currently starting from a vocabulary that includes all products on the site,
+    # that needs to query the catalog to get info about all.
+    # It would make sense to only query the products we care about
+    # (the ones in `field.available_products`).
     if vocab_factory is not None:
         vocab = vocab_factory(context)
         terms.terms = SimpleVocabulary([
