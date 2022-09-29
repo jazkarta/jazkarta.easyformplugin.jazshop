@@ -78,3 +78,7 @@ class ILikert(IField):
 
 class ILikertWidget(z3c.form.interfaces.IWidget):
     """Likert widget."""
+
+
+class IJazShopArbitraryPriceStringField(IField):
+    """Arbitrary price field (suitable for donations)"""

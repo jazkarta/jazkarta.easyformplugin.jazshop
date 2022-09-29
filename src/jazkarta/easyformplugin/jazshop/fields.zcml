@@ -30,6 +30,16 @@
       />
 
   <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField"
+      component=".fields.JazShopArbitraryPriceStringFieldFactory"
+      />
+
+  <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField"
+      component=".fields.JazShopArbitraryPriceStringFieldHandler"
+      />
+
+  <utility
       name="jazkarta.easyformplugin.jazshop.fields.Likert"
       component=".fields.LikertHandler"
       />

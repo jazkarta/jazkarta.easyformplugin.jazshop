@@ -1,4 +1,6 @@
 from . import _
+from decimal import Decimal
+from decimal import InvalidOperation
 from z3c.form.interfaces import IFieldWidget
 from z3c.form.interfaces import IFormLayer
 from z3c.form.interfaces import ITerms
@@ -12,6 +14,7 @@ from zope.component import adapter
 from zope.component import queryUtility
 from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface import Invalid
 from zope.schema import TextLine
 from zope.schema import Tuple
 from zope.schema import Field
@@ -23,6 +26,7 @@ from plone.supermodel.exportimport import BaseHandler
 from .interfaces import IJazShopProductSelect
 from .interfaces import IJazShopProductMultiSelect
 from .interfaces import ILikert
+from .interfaces import IJazShopArbitraryPriceStringField
 
 
 @implementer(IJazShopProductSelect)
@@ -134,3 +138,20 @@ LikertFactory = FieldFactory(
     Likert, _(u"label_likert_field", default=u"Likert")
 )
 LikertHandler = BaseHandler(Likert)
+
+
+@implementer(IJazShopArbitraryPriceStringField)
+class JazShopArbitraryPriceStringField(TextLine):
+    """Arbitrary price field (suitable for donations)"""
+    def _validate(self, value):
+        super(JazShopArbitraryPriceStringField, self)._validate(value)
+        try:
+            Decimal(value)
+        except InvalidOperation:
+            raise Invalid(_("invalid_price", "Please insert a number"))
+
+
+JazShopArbitraryPriceStringFieldFactory = FieldFactory(
+    JazShopArbitraryPriceStringField, _(u"label_arbitraty_price_field", default=u"Arbitrary price")
+)
+JazShopArbitraryPriceStringFieldHandler = BaseHandler(JazShopArbitraryPriceStringField)
