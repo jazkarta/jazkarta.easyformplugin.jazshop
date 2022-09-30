@@ -57,9 +57,13 @@ def JazShopProductSelectTerms(context, request, form, field, widget):
     # (the ones in `field.available_products`).
     if vocab_factory is not None:
         vocab = vocab_factory(context)
-        terms.terms = SimpleVocabulary([
-            vocab.getTerm(v) for v in field.available_products
-        ])
+        new_items = []
+        for vocab_item in field.available_products:
+            try:
+                new_items.append(vocab.getTerm(vocab_item))
+            except LookupError:
+                pass
+        terms.terms = SimpleVocabulary(new_items)
     else:
         terms.terms = SimpleVocabulary([])
     return terms
@@ -149,7 +153,7 @@ class JazShopArbitraryPriceStringField(TextLine):
     def _validate(self, value):
         super(JazShopArbitraryPriceStringField, self)._validate(value)
         try:
-            Decimal(value)
+            Decimal(value.replace("$", ""))
         except InvalidOperation:
             raise Invalid(_("invalid_price", "Please insert a number"))
 

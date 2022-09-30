@@ -1,3 +1,4 @@
+from decimal import Decimal
 import logging
 from collective.easyform.actions import Action, ActionFactory
 from collective.easyform.api import get_context, get_schema
@@ -10,7 +11,7 @@ from jazkarta.shop.cart import Cart
 from Products.statusmessages.interfaces import IStatusMessage
 
 from . import _
-from .interfaces import IJazShopCheckout
+from .interfaces import IJazShopArbitraryPriceStringField, IJazShopCheckout
 from .interfaces import IJazShopProductSelect
 from .interfaces import IJazShopProductMultiSelect
 
@@ -78,11 +79,13 @@ class JazShopCheckout(Action):
             if uid != '0':
                 cart.add_product(uid)
                 easyform_products.append(uid)
-        if item_prepend is not None:
-            for item in cart._items.values():
-                if (item['uid'] in products and
-                        not item['name'].startswith(item_prepend)):
+        for item in cart._items.values():
+            if item['uid'] in products:
+                if item_prepend and not item['name'].startswith(item_prepend):
                     item['name'] = item_prepend + item['name']
+                price = products[item["uid"]].get("price")
+                if price:
+                    item['price'] = Decimal(price.replace("$", ""))
         form_uid = form.UID()
         cart.data['easyform_products'][form_uid] = easyform_products
         cart_fields, details = self._get_item_details(fields, request)
@@ -188,14 +191,21 @@ def get_products(schema, fields):
     """Given a schema and field values, look into fields that belong to this add-on,
     extract and return the products that are selected
     """
-    products = []
+    products = {}
     for field in fields:
         if field not in schema:
             continue  # Should never happen
         if IJazShopProductMultiSelect.providedBy(schema[field]):
-            products.extend(fields[field])
+            for uid in fields[field]:
+                products[uid] = {}
         elif IJazShopProductSelect.providedBy(schema[field]):
-            products.append(fields[field])
+            if fields[field]:
+                products[fields[field]] = {}
+        elif IJazShopArbitraryPriceStringField.providedBy(schema[field]):
+            if schema[field].available_products and fields[field]:
+                product = schema[field].available_products[0]
+                if product:
+                    products[product] = {"price": fields[field]}
     return products
 
 
