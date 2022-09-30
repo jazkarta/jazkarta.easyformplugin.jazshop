@@ -37,11 +37,23 @@ def migrate_thanksPageOverride_field(src_obj, dst_obj, src_fieldname, dst_fieldn
         dst_obj.thanksPageOverrideAction, dst_obj.thanksPageOverride = at_value.split(":", 1)
 
 
+def migrate_available_products(field, name, value):
+    node = etree.SubElement(field, name)
+    if not isinstance(value, (list, tuple)):
+        values = [value]
+    else:
+        values = value
+    for uid in values:
+        uid_node = etree.SubElement(node, "element")
+        uid_node.text = uid
+    return node
+
+
 def patch_easyform():
     FIELDS_TYPES_MAPPING["JazShopSelectStringField"] = Type("jazkarta.easyformplugin.jazshop.fields.JazShopProductSelect", append_field)
     FIELDS_TYPES_MAPPING["JazShopMultiSelectStringField"] = Type("jazkarta.easyformplugin.jazshop.fields.JazShopProductMultiSelect", append_field)
     FIELDS_TYPES_MAPPING["JazShopArbitraryPriceStringField"] = Type("jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField", append_field)
-    FIELDS_PROPERTIES_MAPPING["availableProducts"] = Property("available_products", append_node)
+    FIELDS_PROPERTIES_MAPPING["availableProducts"] = Property("available_products", migrate_available_products)
     FIELDS_PROPERTIES_MAPPING["selectionFormat"] = Property("use_radio", append_use_radio_node)
     ACTIONS_TYPES_MAPPING["JazShopCheckoutAdapter"] = Type("jazkarta.easyformplugin.jazshop.action.JazShopCheckout", append_field)
     ACTIONS_PROPERTIES_MAPPING["formIdExpression"] = Property("form_id_expression", append_node)
