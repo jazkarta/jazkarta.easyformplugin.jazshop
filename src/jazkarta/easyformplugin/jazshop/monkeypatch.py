@@ -12,12 +12,9 @@ from collective.easyform.migration.pfg import FIELD_MAPPING as PFG_FIELD_MAPPING
 
 
 def append_use_radio_node(field, name, value):
-    node = etree.SubElement(field, name)
-    if value == "select":
-        node.text = "False"
-    else:
+    if value == "checkbox":
+        node = etree.SubElement(field, name)
         node.text = "True"
-    return node
 
 
 def migrate_thanksPageOverride_field(src_obj, dst_obj, src_fieldname, dst_fieldname):
