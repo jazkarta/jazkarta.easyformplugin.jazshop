@@ -68,9 +68,9 @@ class JazShopCheckout(Action):
         schema = get_schema(form)
 
         item_prepend = None
-        if self.formIdExpression:
+        if self.form_id_expression:
             try:
-                item_prepend = self.formIdExpression.format(**fields)
+                item_prepend = self.form_id_expression.format(**fields)
             except (KeyError, ValueError):
                 pass
         products = get_products(schema, fields)
