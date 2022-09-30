@@ -38,9 +38,9 @@ def migrate_thanksPageOverride_field(src_obj, dst_obj, src_fieldname, dst_fieldn
 
 
 def patch_easyform():
-    FIELDS_TYPES_MAPPING["JazShopSelectStringField"] = Type("JazShopProductSelect", append_field)
-    FIELDS_TYPES_MAPPING["JazShopMultiSelectStringField"] = Type("JazShopProductMultiSelect", append_field)
-    FIELDS_TYPES_MAPPING["JazShopArbitraryPriceStringField"] = Type("JazShopArbitraryPriceStringField", append_field)
+    FIELDS_TYPES_MAPPING["JazShopSelectStringField"] = Type("jazkarta.easyformplugin.jazshop.fields.JazShopProductSelect", append_field)
+    FIELDS_TYPES_MAPPING["JazShopMultiSelectStringField"] = Type("jazkarta.easyformplugin.jazshop.fields.JazShopProductMultiSelect", append_field)
+    FIELDS_TYPES_MAPPING["JazShopArbitraryPriceStringField"] = Type("jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField", append_field)
     FIELDS_PROPERTIES_MAPPING["availableProducts"] = Property("available_products", append_node)
     FIELDS_PROPERTIES_MAPPING["selectionFormat"] = Property("use_radio", append_use_radio_node)
     ACTIONS_TYPES_MAPPING["JazShopCheckoutAdapter"] = Type("jazkarta.easyformplugin.jazshop.action.JazShopCheckout", append_field)

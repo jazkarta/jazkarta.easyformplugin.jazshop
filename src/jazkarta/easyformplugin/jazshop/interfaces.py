@@ -14,7 +14,7 @@ class IJazkartaEasyformpluginJazShopLayer(IDefaultBrowserLayer):
 
 class IJazShopCheckout(IAction):
     """Easyform action which places data in the jazkarta.shop cart"""
-    formIdExpression = schema.TextLine(
+    form_id_expression = schema.TextLine(
         title=_(u'Form id expression'),
         description=_(u'An expression used to mark products in the cart. You can include field contents with {field_name}'),
         required=False,
