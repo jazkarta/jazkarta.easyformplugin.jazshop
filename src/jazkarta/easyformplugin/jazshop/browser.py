@@ -1,7 +1,7 @@
 import csv
 from collections import OrderedDict
 from DateTime import DateTime
-from StringIO import StringIO
+from six import StringIO
 from zope.browserpage import ViewPageTemplateFile
 from Products.Five import BrowserView
 from jazkarta.shop.api import get_order_from_id

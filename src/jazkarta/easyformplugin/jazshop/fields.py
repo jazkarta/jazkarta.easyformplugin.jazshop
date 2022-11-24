@@ -28,6 +28,7 @@ from .interfaces import IJazShopProductMultiSelect
 from .interfaces import ILikert
 from .interfaces import IJazShopArbitraryPriceStringField
 
+from six import PY3
 
 @implementer(IJazShopProductSelect)
 class JazShopProductSelect(TextLine):
@@ -87,7 +88,7 @@ JazShopProductSelectHandler = BaseHandler(JazShopProductSelect)
 class JazShopProductMultiSelect(Tuple):
     """A Product Multi-selection Field"""
 
-    __init__ = JazShopProductSelect.__init__.im_func
+    __init__ = JazShopProductSelect.__dict__['__init__'] if PY3 else JazShopProductSelect.__init__.im_func
 
 
 @adapter(IJazShopProductMultiSelect, IFormLayer)
