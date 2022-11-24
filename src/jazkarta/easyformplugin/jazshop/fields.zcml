@@ -30,6 +30,16 @@
       />
 
   <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField"
+      component=".fields.JazShopArbitraryPriceStringFieldFactory"
+      />
+
+  <utility
+      name="jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField"
+      component=".fields.JazShopArbitraryPriceStringFieldHandler"
+      />
+
+  <utility
       name="jazkarta.easyformplugin.jazshop.fields.Likert"
       component=".fields.LikertHandler"
       />
@@ -39,6 +49,12 @@
       for=".interfaces.product_select_field plone.app.z3cform.interfaces.IPloneFormLayer"
       factory="plone.app.z3cform.widget.SelectFieldWidget"
       />
+
+  <adapter
+      for=".interfaces.arbitrary_price_product_select_field plone.app.z3cform.interfaces.IPloneFormLayer"
+      factory="plone.app.z3cform.widget.SelectFieldWidget"
+      />
+
   <adapter factory=".fields.JazShopProductSelectTerms" />
   <adapter factory=".fields.JazShopProductSelectFieldWidget" />
   <adapter factory=".fields.JazShopProductMultiSelectFieldWidget" />

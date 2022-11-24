@@ -51,6 +51,7 @@ setup(
     install_requires=[
         "setuptools",
         "collective.easyform",
+        "jazkarta.shop"
     ],
     extras_require={
         "test": [
