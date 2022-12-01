@@ -9,7 +9,10 @@ _ = MessageFactory("jazkarta.easyformplugin.jazshop")
 from .interfaces import ILikert  # noqa
 from .interfaces import ILikertWidget  # noqa
 
-from .monkeypatch import patch_easyform
-
-
-patch_easyform()
+try:
+    # patch are only needed in migration PFG->easyform
+    # in python3 this will cause import error (PFG missing)
+    from .monkeypatch import patch_easyform
+    patch_easyform()
+except:
+    pass
