@@ -2,6 +2,7 @@ from decimal import Decimal
 import logging
 from collective.easyform.actions import Action, ActionFactory
 from collective.easyform.api import get_context, get_schema
+from plone import api
 from plone.app.uuid.utils import uuidToObject
 from plone.schemaeditor.utils import FieldAddedEvent, FieldRemovedEvent
 from plone.supermodel.exportimport import BaseHandler
@@ -179,9 +180,13 @@ def uids_to_title(values):
     titles = []
     if not isinstance(values, tuple) and not isinstance(values, list):
         values = [values]
+    catalog = api.portal.get_tool('portal_catalog')
     for value in values:
         try:
-            titles.append(uuidToObject(value).title)
+            res = catalog.unrestrictedSearchResults(UID=value)
+            if len(res) == 1:
+                obj = catalog.unrestrictedTraverse(res[0].getPath()) # will get even private objects - https://www.mail-archive.com/zope-dev@zope.org/msg17514.html
+                titles.append(obj.title)
         except AttributeError:
             logger.error("UID not found while compiling cart summary: %s" % value)
     return ", ".join(titles)
