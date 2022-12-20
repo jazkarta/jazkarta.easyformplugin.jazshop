@@ -25,11 +25,6 @@
       />
 
   <utility
-      name="jazkarta.easyformplugin.jazshop.fields.Likert"
-      component=".fields.LikertFactory"
-      />
-
-  <utility
       name="jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField"
       component=".fields.JazShopArbitraryPriceStringFieldFactory"
       />
@@ -37,11 +32,6 @@
   <utility
       name="jazkarta.easyformplugin.jazshop.fields.JazShopArbitraryPriceStringField"
       component=".fields.JazShopArbitraryPriceStringFieldHandler"
-      />
-
-  <utility
-      name="jazkarta.easyformplugin.jazshop.fields.Likert"
-      component=".fields.LikertHandler"
       />
 
   <!-- Custom widgets -->
@@ -58,39 +48,5 @@
   <adapter factory=".fields.JazShopProductSelectTerms" />
   <adapter factory=".fields.JazShopProductSelectFieldWidget" />
   <adapter factory=".fields.JazShopProductMultiSelectFieldWidget" />
-
-  <class class=".likert.LikertWidget">
-    <require
-        permission="zope.Public"
-        interface=".interfaces.ILikertWidget"
-        />
-  </class>
-
-  <adapter
-      factory=".likert.LikertFieldWidget"
-      for=".interfaces.ILikert
-           z3c.form.interfaces.IFormLayer"
-      />
-
-  <z3c:widgetTemplate
-      mode="display"
-      widget=".interfaces.ILikertWidget"
-      layer="z3c.form.interfaces.IFormLayer"
-      template="likert_display.pt"
-      />
-
-  <z3c:widgetTemplate
-      mode="input"
-      widget=".interfaces.ILikertWidget"
-      layer="z3c.form.interfaces.IFormLayer"
-      template="likert_input.pt"
-      />
-
-  <z3c:widgetTemplate
-      mode="hidden"
-      widget=".interfaces.ILikertWidget"
-      layer="z3c.form.interfaces.IFormLayer"
-      template="likert_hidden.pt"
-      />
 
 </configure>

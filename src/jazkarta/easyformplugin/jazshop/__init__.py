@@ -6,9 +6,6 @@ from zope.i18nmessageid import MessageFactory
 _ = MessageFactory("jazkarta.easyformplugin.jazshop")
 
 
-from .interfaces import ILikert  # noqa
-from .interfaces import ILikertWidget  # noqa
-
 try:
     # patch are only needed in migration PFG->easyform
     # in python3 this will cause import error (PFG missing)
