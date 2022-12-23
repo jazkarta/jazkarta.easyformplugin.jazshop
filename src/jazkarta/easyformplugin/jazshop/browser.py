@@ -163,10 +163,9 @@ class JazShopEasyformOrders(BrowserView, DateMixin):
                     'bill_email': bill.get('email'),
                     'items': order.get('items'),
                 }
-                for k, v in list(ldict.items()):
-                    # CSV output needs to be encoded in PY2
-                    # the encoding in PY3 is done on the whole stream later
-                     if not PY3:
+                # CSV output needs to be encoded in PY2, the encoding in PY3 is done on the whole stream later
+                if not PY3:
+                    for k, v in list(ldict.items()):
                         if isinstance(v, unicode):
                             ldict[k] = v.encode('utf-8')
                 ldict.update(order['pfg_forms'][form_uid])  # legacy orders are stored under 'pfg_forms' key.  XXX add easyform_forms or equivalent as well
