@@ -13,7 +13,9 @@
 
 <metal:main fill-slot="content-core">
   <div>
-    <h1 class="documentFirstHeading">Export Orders - <tal:title replace="context/aq_parent/Title|context/Title|nothing" /></h1>
+    <h1 class="documentFirstHeading">Export Orders</h1>
+<!--!    <h1 class="documentFirstHeading">Export Orders - <tal:title replace="context/Title|context/Title|nothing" /></h1> -->
+<!--!    ^ this view used to be show in the context of /checkout/ view, now it is directly on the easyform. No need for redundant title anymore -->
 
     <form id="export-form-orders" name="export-form-orders" method="post"
           tal:condition="view/orders_exist"
