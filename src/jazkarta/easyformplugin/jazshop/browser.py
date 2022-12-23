@@ -101,15 +101,27 @@ class JazShopEasyformOrders(BrowserView, DateMixin):
             field_map[field[0]] = field[1].title
 
         if orders and len(orders) > 0:
-            writer = csv.DictWriter(
-                orders_csv,
+
+            if PY3:
                 fieldnames=(
                     ['date', 'ship_to', 'ship_method',
                      'bill_first_name', 'bill_last_name',
                      'bill_street', 'bill_city', 'bill_state',
                      'bill_postal_code', 'bill_country', 'bill_phone',
                      'bill_email', 'items'] +
-                     field_map.keys()),
+                     list(field_map.keys()))
+            else:
+                fieldnames=(
+                    ['date', 'ship_to', 'ship_method',
+                     'bill_first_name', 'bill_last_name',
+                     'bill_street', 'bill_city', 'bill_state',
+                     'bill_postal_code', 'bill_country', 'bill_phone',
+                     'bill_email', 'items'] +
+                     field_map.keys())
+
+            writer = csv.DictWriter(
+                orders_csv,
+                fieldnames,
                 restval='',
                 extrasaction='ignore',
                 dialect='excel',

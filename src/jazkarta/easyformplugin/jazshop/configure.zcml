@@ -55,7 +55,7 @@
 
   <browser:page
       name="jazshop-easyform-orders"
-      for="*"
+      for="collective.easyform.interfaces.IEasyForm"
       class=".browser.JazShopEasyformOrders"
       permission="jazkarta.easyformplugin.jazshop.AccessEasyformOrders"
       />
