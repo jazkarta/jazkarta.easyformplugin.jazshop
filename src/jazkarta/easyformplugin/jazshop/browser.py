@@ -170,10 +170,8 @@ class JazShopEasyformOrders(BrowserView, DateMixin):
                             ldict[k] = v.encode('utf-8')
                 if 'pfg_forms' in order:
                     ldict.update(order['pfg_forms'][form_uid])
-                elif isinstance(order['easyform_forms'][form_uid], dict):
-                    # Easyform orders don't currently include the same data pfg ones do,
-                    # probably due to a bug in JazShopCheckout.onSuccess
-                    ldict.update(order['easyform_forms'][form_uid])
+                elif 'easyform_form_fieldvalues' in order and order['easyform_form_fieldvalues'].get(form_uid):
+                    ldict.update(order['easyform_form_fieldvalues'][form_uid])
                 writer.writerow(ldict)
 
             csv_content = orders_csv.getvalue()

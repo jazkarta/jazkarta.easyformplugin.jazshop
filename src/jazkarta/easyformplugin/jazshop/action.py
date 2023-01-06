@@ -89,6 +89,7 @@ class JazShopCheckout(Action):
                     item['price'] = Decimal(price.replace("$", ""))
         form_uid = form.UID()
         cart.data['easyform_products'][form_uid] = easyform_products
+        cart.data['easyform_form_fieldvalues'][form_uid] = fields
         cart_fields, details = self._get_item_details(fields, request)
         cart.data['easyform_forms'][form_uid] = cart_fields
         cart.data['easyform_details'][form_uid] = details
