@@ -1,10 +1,18 @@
 import csv
-from six import PY3
+import six
 from collections import OrderedDict
 from DateTime import DateTime
 from six import StringIO
+from z3c.form.interfaces import ITerms
+from z3c.form.widget import Widget
 from zope.browserpage import ViewPageTemplateFile
+from zope.component import queryMultiAdapter
 from zope.schema import getFieldsInOrder
+from Products.CMFPlone.utils import safe_encode
+try:
+    from Products.CMFPlone.utils import safe_nativestring
+except ImportError:
+    safe_nativestring = safe_encode
 from Products.Five import BrowserView
 from collective.easyform.api import get_schema
 from jazkarta.shop.api import get_order_from_id
@@ -12,6 +20,7 @@ from jazkarta.shop.browser.controlpanel import DateMixin, LazyFilteredOrders
 from jazkarta.shop.utils import resolve_uid
 from jazkarta.shop import storage
 from plone.uuid.interfaces import IUUID
+from .interfaces import IJazShopProductSelect
 
 
 class JazShopEasyformCallback(BrowserView):
@@ -96,28 +105,27 @@ class JazShopEasyformOrders(BrowserView, DateMixin):
 
         schema = get_schema(easy_form)
         fields = getFieldsInOrder(schema) # returns list of tuples
+        product_fields = {}
         field_map = OrderedDict()
         for field in fields:
-            field_map[field[0]] = field[1].title
+            field_obj = field[1]
+            field_id = field[0]
+            field_map[field_id] = field_obj.title
+            if IJazShopProductSelect.providedBy(field_obj):
+                vocab = queryMultiAdapter((self.context, self.request,
+                                            None, field_obj,
+                                            Widget(self.request)), ITerms)
+                product_fields[field_id] = vocab
 
         if orders and len(orders) > 0:
-
-            if PY3:
-                fieldnames=(
-                    ['date', 'ship_to', 'ship_method',
-                     'bill_first_name', 'bill_last_name',
-                     'bill_street', 'bill_city', 'bill_state',
-                     'bill_postal_code', 'bill_country', 'bill_phone',
-                     'bill_email', 'items'] +
-                     list(field_map.keys()))
-            else:
-                fieldnames=(
-                    ['date', 'ship_to', 'ship_method',
-                     'bill_first_name', 'bill_last_name',
-                     'bill_street', 'bill_city', 'bill_state',
-                     'bill_postal_code', 'bill_country', 'bill_phone',
-                     'bill_email', 'items'] +
-                     field_map.keys())
+            fieldnames = (
+                ['date', 'ship_to', 'ship_method',
+                    'bill_first_name', 'bill_last_name',
+                    'bill_street', 'bill_city', 'bill_state',
+                    'bill_postal_code', 'bill_country', 'bill_phone',
+                    'bill_email', 'items'] +
+                list(field_map.keys())
+            )
 
             writer = csv.DictWriter(
                 orders_csv,
@@ -163,15 +171,31 @@ class JazShopEasyformOrders(BrowserView, DateMixin):
                     'bill_email': bill.get('email'),
                     'items': order.get('items'),
                 }
-                # CSV output needs to be encoded in PY2, the encoding in PY3 is done on the whole stream later
-                if not PY3:
-                    for k, v in list(ldict.items()):
-                        if isinstance(v, unicode):
-                            ldict[k] = v.encode('utf-8')
+                form_data = {}
                 if 'pfg_forms' in order:
-                    ldict.update(order['pfg_forms'][form_uid])
+                    form_data = order['pfg_forms'][form_uid]
                 elif 'easyform_form_fieldvalues' in order and order['easyform_form_fieldvalues'].get(form_uid):
-                    ldict.update(order['easyform_form_fieldvalues'][form_uid])
+                    form_data = order['easyform_form_fieldvalues'][form_uid]
+                ldict.update(form_data)
+                for k, v in tuple(ldict.items()):
+                    if k in product_fields:
+                        vocab = product_fields[k]
+                        if isinstance(v, six.string_types):
+                            values = [v]
+                        else:
+                            values = v
+                        output = []
+                        for entry in values:
+                            title = entry
+                            if vocab:
+                                term = vocab.getTerm(entry)
+                                title = term.title if term else entry
+                            output.append(title)
+                        v = output
+                    if isinstance(v, (list, tuple, set)):
+                        v = '; '.join(safe_nativestring(v))
+                    ldict[k] = safe_nativestring(v)
+
                 writer.writerow(ldict)
 
             csv_content = orders_csv.getvalue()
@@ -199,6 +223,6 @@ class JazShopEasyformOrders(BrowserView, DateMixin):
                                             DateTime.rfc822(DateTime()))
             self.request.response.setHeader("Cache-Control", "no-store")
             self.request.response.setHeader("Pragma", "no-cache")
-            self.request.response.write(csv_content.encode() if PY3 else csv_content)
+            self.request.response.write(safe_encode(csv_content))
 
         return csv_content
