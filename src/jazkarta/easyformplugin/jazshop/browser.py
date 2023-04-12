@@ -188,7 +188,10 @@ class JazShopEasyformOrders(BrowserView, DateMixin):
                         for entry in values:
                             title = entry
                             if vocab:
-                                term = vocab.getTerm(entry)
+                                try:
+                                    term = vocab.getTerm(entry)
+                                except LookupError:
+                                    term = None
                                 title = term.title if term else entry
                             output.append(title)
                         v = output
