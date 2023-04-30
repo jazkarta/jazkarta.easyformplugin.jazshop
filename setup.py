@@ -16,7 +16,7 @@ long_description = "\n\n".join(
 
 setup(
     name="jazkarta.easyformplugin.jazshop",
-    version="1.0a1",
+    version="1.0a2",
     description="Adds behaviors and fields to collective.easyform to interact with jazkarta.shop",
     long_description=long_description,
     # Get more from https://pypi.org/classifiers/
@@ -51,7 +51,8 @@ setup(
     install_requires=[
         "setuptools",
         "collective.easyform",
-        "jazkarta.shop"
+        "jazkarta.shop",
+        "z3c.jbot"
     ],
     extras_require={
         "test": [
